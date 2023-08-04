@@ -10,7 +10,7 @@ console.log(licenseKey, "!!!");
 export default function App() {
   return (
     <>
-      <h2>Adaptable Demo in Vite</h2>
+      <h2>AdapTable for Infinite Table for React Demo</h2>
       <div
         style={{
           width: "90vw",
@@ -32,8 +32,13 @@ export default function App() {
               top: {
                 widgets: [
                   {
-                    id: "test",
+                    id: "views",
                     type: "view",
+                  },
+                  {
+                    //   id: 'quickSearch',
+                    type: "quickSearch",
+                    align: "end",
                   },
                 ],
               },
@@ -46,7 +51,7 @@ export default function App() {
                   label: "My View",
                   columns: [
                     {
-                      id: "group",
+                      id: "Language",
                       groupBy: ["language"],
                     },
                     {
@@ -60,6 +65,12 @@ export default function App() {
                     },
                     {
                       id: "license",
+                    },
+                    {
+                      id: "github_watchers",
+                    },
+                    {
+                      id: "description",
                     },
                   ],
                 },
