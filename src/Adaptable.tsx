@@ -11,6 +11,7 @@ export default function App() {
   return (
     <>
       <h2>AdapTable for Infinite Table for React Demo</h2>
+      
       <div
         style={{
           width: "90vw",
@@ -56,6 +57,7 @@ export default function App() {
                     },
                     {
                       id: "name",
+                      editable: true
                     },
                     {
                       id: "github_stars",
