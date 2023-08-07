@@ -26,7 +26,7 @@ export default function App() {
       <h2 className="font-bold p-2 flex flex-row items-center">
         <div className="text-2xl flex flex-row items-center dark:text-zinc-50 text-zinc-700">
           <img src="/adaptable-logo.svg" className="h-8 inline-block mr-2" />{" "}
-          Adaptable for Infinite Table
+          AdapTable for Infinite Table for React Demo
         </div>
         <div className=" grow text-end flex flex-row justify-end items-center">
           <AccentColorPicker />
@@ -61,8 +61,13 @@ export default function App() {
                 top: {
                   widgets: [
                     {
-                      id: "test",
+                      id: "views",
                       type: "view",
+                    },
+                    {
+                      id: "qs",
+                      type: "quickSearch",
+                      align: "end",
                     },
                   ],
                 },
@@ -75,11 +80,12 @@ export default function App() {
                     label: "My View",
                     columns: [
                       {
-                        id: "group",
+                        id: "Language",
                         groupBy: ["language"],
                       },
                       {
                         id: "name",
+                        editable: true,
                       },
                       {
                         id: "github_stars",
@@ -88,7 +94,13 @@ export default function App() {
                         id: "language",
                       },
                       {
-                        id: "license",
+                        id: "test",
+                      },
+                      {
+                        id: "github_watchers",
+                      },
+                      {
+                        id: "description",
                       },
                     ],
                   },
