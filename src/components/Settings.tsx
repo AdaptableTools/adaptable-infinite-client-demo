@@ -4,24 +4,24 @@ import {
 } from "@adaptabletools/adaptable-infinite-react";
 import { useEffect, useState } from "react";
 
-const { Button, Tabs, Select } = components;
+const { Button, Tabs, Select, Checkbox } = components;
 type SettingsProps = {
   onClose: () => void;
   adaptableApi: AdaptableApi;
 };
 
 const clsForSettingsLabel =
-  "text-xl whitespace-nowrap flex flex-row items-center";
+  "text-md whitespace-nowrap flex flex-row items-center";
 export function Settings(props: SettingsProps) {
   const [rowHeight, setRowHeight] = useState("40px");
+  const [zebraStripes, setZebrastripes] = useState(true);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--row-height", rowHeight);
   }, [rowHeight]);
   return (
-    <div className=" flex flex-row border-zinc-400 border-l-2 dark:text-zinc-50 text-zinc-700">
-      <div className="bg-zinc-400 w-1"></div>
-      <div className=" flex flex-col overflow-hidden w-[30vw]">
+    <div className="AppSettings flex flex-row border-zinc-400 dark:text-zinc-50 text-zinc-700">
+      <div className=" flex flex-col overflow-hidden w-[30vw] ml-2 ">
         <Tabs defaultValue={"settings"}>
           <Tabs.List>
             <Tabs.Trigger name="settings">Settings</Tabs.Trigger>
@@ -29,12 +29,11 @@ export function Settings(props: SettingsProps) {
             <Tabs.Trigger name="docs">Docs</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content name="settings">
-            <div className="grid gap-3 grid-cols-[1fr_10fr]">
+            <div className="grid gap-3 grid-cols-[1fr_10fr] overflow-auto">
               <span className={clsForSettingsLabel}>Theme</span>
               <div>
                 <Button
                   size="small"
-                  ml={3}
                   variant="text"
                   onClick={() => {
                     props.adaptableApi.themeApi.setTheme("light");
@@ -54,11 +53,11 @@ export function Settings(props: SettingsProps) {
                 </Button>
               </div>
 
-              <span className={clsForSettingsLabel}>Row Height (soon)</span>
+              <span className={clsForSettingsLabel}>Row Height</span>
               <Select
                 onChange={(value) => {
                   setRowHeight(value);
-                  // props.adaptableApi.gridApi.set;
+                  props.adaptableApi.gridApi.setRowHeight(parseInt(value));
                 }}
                 options={[
                   {
@@ -75,6 +74,15 @@ export function Settings(props: SettingsProps) {
                   },
                 ]}
                 value={rowHeight}
+              />
+
+              <span className={clsForSettingsLabel}>Zebra stripes</span>
+              <Checkbox
+                checked={zebraStripes}
+                onChange={(value) => {
+                  setZebrastripes(value);
+                  props.adaptableApi.gridApi.setZebraStripes(value);
+                }}
               />
             </div>
           </Tabs.Content>

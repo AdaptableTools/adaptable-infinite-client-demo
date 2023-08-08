@@ -25,7 +25,10 @@ export default function App() {
     <>
       <h2 className="font-bold p-2 flex flex-row items-center">
         <div className="text-2xl flex flex-row items-center dark:text-zinc-50 text-zinc-700">
-          <img src="/adaptable-logo.svg" className="h-8 inline-block mr-2" />{" "}
+          <img
+            alt="Adaptable Logo"
+            className="AdaptableLogo h-8 inline-block mr-2"
+          />{" "}
           AdapTable for Infinite Table for React Demo
         </div>
         <div className=" grow text-end flex flex-row justify-end items-center">
@@ -42,72 +45,74 @@ export default function App() {
           </Layout>
         </div>
       </h2>
-      <div className="grow px-2 flex flex-col">
-        <div className="border-2 flex flex-row border-zinc-400 grow rounded-md">
-          <AdaptableInfinite
-            licenseKey={licenseKey}
-            adaptableId="my-adaptable-infinite"
-            data={data}
-            onReady={(params) => {
-              setAdaptableApi(params.adaptableApi);
-            }}
-            defaultState={{
-              globalEntities: {
-                availableColumns: allColumns,
-              },
-              theme: "dark",
-              primaryKey: "id",
-              dashboard: {
-                top: {
-                  widgets: [
-                    {
-                      id: "views",
-                      type: "view",
-                    },
-                    {
-                      id: "qs",
-                      type: "quickSearch",
-                      align: "end",
-                    },
-                  ],
+      <div className="grow p-2 flex flex-col">
+        <div className=" flex flex-row  grow">
+          <div className="border-2 flex flex-row border-zinc-400 grow">
+            <AdaptableInfinite
+              licenseKey={licenseKey}
+              adaptableId="my-adaptable-infinite"
+              data={data}
+              onReady={(params) => {
+                setAdaptableApi(params.adaptableApi);
+              }}
+              defaultState={{
+                globalEntities: {
+                  availableColumns: allColumns,
                 },
-              },
-              view: {
-                currentViewId: "my-view",
-                views: [
-                  {
-                    id: "my-view",
-                    label: "My View",
-                    columns: [
+                theme: "dark",
+                primaryKey: "id",
+                dashboard: {
+                  top: {
+                    widgets: [
                       {
-                        id: "Language",
-                        groupBy: ["language"],
+                        id: "views",
+                        type: "view",
                       },
                       {
-                        id: "name",
-                        editable: true,
-                      },
-                      {
-                        id: "github_stars",
-                      },
-                      {
-                        id: "language",
-                      },
-                      {
-                        id: "test",
-                      },
-                      {
-                        id: "github_watchers",
-                      },
-                      {
-                        id: "description",
+                        id: "qs",
+                        type: "quickSearch",
+                        align: "end",
                       },
                     ],
                   },
-                ],
-              },
-            }}
-          />
+                },
+                view: {
+                  currentViewId: "my-view",
+                  views: [
+                    {
+                      id: "my-view",
+                      label: "My View",
+                      columns: [
+                        {
+                          id: "Language",
+                          groupBy: ["language"],
+                        },
+                        {
+                          id: "name",
+                          editable: true,
+                        },
+                        {
+                          id: "github_stars",
+                        },
+                        {
+                          id: "language",
+                        },
+                        {
+                          id: "test",
+                        },
+                        {
+                          id: "github_watchers",
+                        },
+                        {
+                          id: "description",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              }}
+            />
+          </div>
           {settingsVisible && adaptableApi && (
             <Settings
               adaptableApi={adaptableApi}

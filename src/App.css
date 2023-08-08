@@ -2,3 +2,22 @@
   display: flex;
   flex-flow: column;
 }
+.AdaptableLogo {
+  content: url(/adaptable-logo.svg);
+}
+.dark .AdaptableLogo {
+  content: url(/adaptable-logo-dark.svg);
+}
+
+.AppSettings {
+  --adaptable-tabs-background: var(--adaptable-color-1);
+}
+.AppSettings .AdaptableInfiniteTabs {
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+}
+.AppSettings .AdaptableInfiniteTabs [role="tabpanel"][data-state="active"] {
+  overflow: auto;
+  flex: 1 1 0px;
+}
