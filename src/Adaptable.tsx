@@ -51,7 +51,7 @@ export default function App() {
             <AdaptableInfinite
               licenseKey={licenseKey}
               adaptableId="my-adaptable-infinite"
-              theme='dark'
+              theme="dark"
               data={data}
               onReady={(params) => {
                 setAdaptableApi(params.adaptableApi);
@@ -123,6 +123,7 @@ export default function App() {
                         },
                         {
                           id: "github_stars",
+                          aggregation: "sum",
                         },
                         {
                           id: "language",
@@ -132,20 +133,10 @@ export default function App() {
                         },
                         {
                           id: "github_watchers",
+                          aggregation: "sum",
                         },
                         {
                           id: "description",
-                        },
-                      ],
-                      aggregationColumns: [
-                        {
-                          columnId: "github_stars",
-                          aggregation: "sum",
-                          label: "Total Stars",
-                        },
-                        {
-                          columnId: "github_watchers",
-                          aggregation: "avg",
                         },
                       ],
                     },
