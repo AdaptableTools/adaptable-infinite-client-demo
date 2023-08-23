@@ -1,6 +1,7 @@
 import {
   AdaptableApi,
   components,
+  useAdaptableState,
 } from "@adaptabletools/adaptable-infinite-react";
 import { useEffect, useState } from "react";
 
@@ -13,8 +14,14 @@ type SettingsProps = {
 const clsForSettingsLabel =
   "text-md whitespace-nowrap flex flex-row items-center";
 export function Settings(props: SettingsProps) {
-  const [rowHeight, setRowHeight] = useState("40px");
-  const [zebraStripes, setZebrastripes] = useState(true);
+  const gridState = useAdaptableState((state) => state.grid);
+  const initialRowHeight = gridState.rowHeight;
+  const initialZebraStripes = gridState.zebraStripes;
+
+  const [rowHeight, setRowHeight] = useState(
+    initialRowHeight ? `${initialRowHeight}px` : "40px"
+  );
+  const [zebraStripes, setZebrastripes] = useState(initialZebraStripes);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--row-height", rowHeight);
@@ -84,6 +91,17 @@ export function Settings(props: SettingsProps) {
                   props.adaptableApi.gridApi.setZebraStripes(value);
                 }}
               />
+              <span className={clsForSettingsLabel}>Clear state</span>
+              <div>
+                <Button
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                >
+                  Clear & reload
+                </Button>
+              </div>
             </div>
           </Tabs.Content>
           <Tabs.Content name="docs">

@@ -5,13 +5,14 @@ import { useState } from "react";
 import "@adaptabletools/adaptable-infinite-react/index.css";
 
 import {
+  Adaptable,
   AdaptableApi,
-  AdaptableInfinite,
   components,
 } from "@adaptabletools/adaptable-infinite-react";
 
 import { AccentColorPicker } from "./components/AccentColorPicker";
 import { Settings } from "./components/Settings";
+import { ADAPTABLE_ID } from "./adaptableId";
 
 const licenseKey = import.meta.env.VITE_ADAPTABLE_INFINITE_LICENSE_KEY;
 
@@ -23,7 +24,131 @@ export default function App() {
 
   const [settingsVisible, setSettingsVisible] = useState(false);
   return (
-    <>
+    <Adaptable.Provider
+      licenseKey={licenseKey}
+      adaptableId={ADAPTABLE_ID}
+      data={data}
+      onReady={(params) => {
+        setAdaptableApi(params.adaptableApi);
+      }}
+      defaultState={{
+        globalEntities: {
+          availableColumns: allColumns,
+        },
+        grid: {},
+        theme: "dark",
+        primaryKey: "id",
+        dashboard: {
+          top: {
+            widgets: [
+              {
+                id: "views",
+                type: "view",
+              },
+              {
+                id: "qs",
+                type: "quickSearch",
+                align: "end",
+              },
+            ],
+          },
+        },
+        view: {
+          currentViewId: "table-view",
+          views: [
+            {
+              id: "table-view",
+              label: "Table View",
+              columns: [
+                {
+                  id: "Language",
+                },
+                {
+                  id: "name",
+                  editable: true,
+                },
+                {
+                  id: "github_stars",
+                  editable: true,
+                },
+                {
+                  id: "language",
+                },
+                {
+                  id: "test",
+                },
+                {
+                  id: "github_watchers",
+                },
+                {
+                  id: "description",
+                },
+              ],
+            },
+            {
+              id: "grouped-view",
+              label: "Grouped View",
+              columns: [
+                {
+                  id: "Group",
+                  groupBy: ["language", "license"],
+                },
+                {
+                  id: "name",
+                  editable: true,
+                },
+                {
+                  id: "github_stars",
+                  aggregation: "sum",
+                },
+                {
+                  id: "language",
+                },
+                {
+                  id: "test",
+                },
+                {
+                  id: "github_watchers",
+                  aggregation: "sum",
+                },
+                {
+                  id: "description",
+                },
+              ],
+            },
+
+            {
+              id: "pivot_view",
+              label: "Pivot View",
+              pivotColumns: [
+                {
+                  columnId: "language",
+                },
+              ],
+
+              pivotAggregationColumns: [
+                {
+                  columnId: "github_stars",
+                  aggregation: "sum",
+                  label: "Total Stars",
+                },
+                {
+                  columnId: "license",
+                  aggregation: "count",
+                },
+              ],
+              pivotGroupColumns: [
+                {
+                  id: "license-group",
+                  label: "Type of License",
+                  groupBy: ["license"],
+                },
+              ],
+            },
+          ],
+        },
+      }}
+    >
       <h2 className="font-bold p-2 flex flex-row items-center">
         <div className="text-2xl flex flex-row items-center dark:text-zinc-50 text-zinc-700">
           <img
@@ -49,130 +174,7 @@ export default function App() {
       <div className="grow p-2 flex flex-col">
         <div className=" flex flex-row grow">
           <div className="border-2 flex flex-col border-zinc-400 grow">
-            <AdaptableInfinite
-              licenseKey={licenseKey}
-              adaptableId="my-adaptable-infinite"
-              data={data}
-              onReady={(params) => {
-                setAdaptableApi(params.adaptableApi);
-              }}
-              defaultState={{
-                globalEntities: {
-                  availableColumns: allColumns,
-                },
-                theme: "dark",
-                primaryKey: "id",
-                dashboard: {
-                  top: {
-                    widgets: [
-                      {
-                        id: "views",
-                        type: "view",
-                      },
-                      {
-                        id: "qs",
-                        type: "quickSearch",
-                        align: "end",
-                      },
-                    ],
-                  },
-                },
-                view: {
-                  currentViewId: "table-view",
-                  views: [
-                    {
-                      id: "table-view",
-                      label: "Table View",
-                      columns: [
-                        {
-                          id: "Language",
-                        },
-                        {
-                          id: "name",
-                          editable: true,
-                        },
-                        {
-                          id: "github_stars",
-                          editable: true,
-                        },
-                        {
-                          id: "language",
-                        },
-                        {
-                          id: "test",
-                        },
-                        {
-                          id: "github_watchers",
-                        },
-                        {
-                          id: "description",
-                        },
-                      ],
-                    },
-                    {
-                      id: "grouped-view",
-                      label: "Grouped View",
-                      columns: [
-                        {
-                          id: "Group",
-                          groupBy: ["language", "license"],
-                        },
-                        {
-                          id: "name",
-                          editable: true,
-                        },
-                        {
-                          id: "github_stars",
-                          aggregation: "sum",
-                        },
-                        {
-                          id: "language",
-                        },
-                        {
-                          id: "test",
-                        },
-                        {
-                          id: "github_watchers",
-                          aggregation: "sum",
-                        },
-                        {
-                          id: "description",
-                        },
-                      ],
-                    },
-
-                    {
-                      id: "pivot_view",
-                      label: "Pivot View",
-                      pivotColumns: [
-                        {
-                          columnId: "language",
-                        },
-                      ],
-
-                      aggregationColumns: [
-                        {
-                          columnId: "github_stars",
-                          aggregation: "sum",
-                          label: "Total Stars",
-                        },
-                        {
-                          columnId: "license",
-                          aggregation: "count",
-                        },
-                      ],
-                      groupColumns: [
-                        {
-                          id: "license-group",
-                          label: "Type of License",
-                          groupBy: ["license"],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              }}
-            />
+            <Adaptable.UI />
           </div>
           {settingsVisible && adaptableApi && (
             <Settings
@@ -184,6 +186,6 @@ export default function App() {
           )}
         </div>
       </div>
-    </>
+    </Adaptable.Provider>
   );
 }
