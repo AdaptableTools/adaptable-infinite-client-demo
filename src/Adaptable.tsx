@@ -1,5 +1,6 @@
 "use client";
 import { allColumns, data } from "./data/frameworks";
+import { useState } from "react";
 
 import "@adaptabletools/adaptable-infinite-react/index.css";
 
@@ -8,7 +9,7 @@ import {
   AdaptableInfinite,
   components,
 } from "@adaptabletools/adaptable-infinite-react";
-import { useState } from "react";
+
 import { AccentColorPicker } from "./components/AccentColorPicker";
 import { Settings } from "./components/Settings";
 
@@ -46,12 +47,11 @@ export default function App() {
         </div>
       </h2>
       <div className="grow p-2 flex flex-col">
-        <div className=" flex flex-row  grow">
-          <div className="border-2 flex flex-row border-zinc-400 grow">
+        <div className=" flex flex-row grow">
+          <div className="border-2 flex flex-col border-zinc-400 grow">
             <AdaptableInfinite
               licenseKey={licenseKey}
               adaptableId="my-adaptable-infinite"
-              theme="dark"
               data={data}
               onReady={(params) => {
                 setAdaptableApi(params.adaptableApi);
