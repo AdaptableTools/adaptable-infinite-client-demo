@@ -105,27 +105,27 @@ export function Settings(props: SettingsProps) {
             </div>
           </Tabs.Content>
           <Tabs.Content name="docs">
-            Cupidatat nisi ullamco sunt ipsum anim consectetur incididunt anim
-            dolore consectetur. Sunt consequat quis nisi eiusmod non mollit elit
-            commodo. Culpa reprehenderit minim adipisicing amet incididunt esse
-            deserunt. Voluptate laboris ullamco sunt sint. Magna dolore id anim
-            cupidatat sit. Aliquip minim sunt incididunt nostrud in adipisicing
-            deserunt velit excepteur in. Pariatur sint ea veniam Lorem. Aute do
-            est in voluptate culpa nisi culpa. Veniam occaecat eiusmod tempor do
-            aliqua labore nostrud Lorem enim. Aliquip veniam amet excepteur
-            commodo. Ipsum quis reprehenderit minim in cupidatat elit cillum
-            culpa magna duis magna voluptate duis do. Duis commodo eu non
-            cupidatat amet fugiat cillum aliquip amet mollit aliqua sint nulla
-            officia. Consectetur nisi esse labore irure fugiat quis. Consequat
-            dolor reprehenderit culpa deserunt nisi aliqua nulla incididunt
-            elit. Voluptate consectetur aute excepteur aliqua qui. Deserunt esse
-            non aute ut sit est enim irure voluptate consectetur. Proident
-            consectetur occaecat laboris dolore in pariatur incididunt ipsum.
-            Magna dolor minim reprehenderit labore eu dolor proident. Veniam
-            aliqua adipisicing nostrud id enim reprehenderit dolor amet elit qui
-            ut ea nostrud ad. Deserunt ullamco veniam aliqua deserunt fugiat
-            enim excepteur. Magna ea ex eiusmod elit mollit Lorem tempor velit
-            fugiat Lorem non amet veniam irure.
+            <div>
+              <p>
+                This is a small demo app that shows some of the capabilities of
+                the AdapTable for Infinite Table. The App includes:
+                <ul>
+                  <li>
+                    3 Views - which allow you to provide different column
+                    configurations:
+                    <ul>
+                      <li>Table View - a standard grid view</li>
+                      <li>
+                        Grouped View - 2 Row Groups (Language & Licence) and
+                        Aggregations for Stars & Watchers
+                      </li>
+                      <li>Pivot View - Grid pivoted on Language Columns</li>
+                    </ul>{" "}
+                    Table, Pivot and Grouped{" "}
+                  </li>{" "}
+                </ul>
+              </p>
+            </div>
           </Tabs.Content>
         </Tabs>
       </div>

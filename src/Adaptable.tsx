@@ -33,7 +33,10 @@ export default function App() {
       }}
       defaultState={{
         globalEntities: {
-          availableColumns: allColumns,
+          availableColumns: {
+            ...allColumns,
+            ...[{}],
+          },
         },
         grid: {},
         theme: "dark",
@@ -52,6 +55,19 @@ export default function App() {
               },
             ],
           },
+          bottom: {
+            widgets: [
+              {
+                id: "row-count",
+                type: "row-count",
+              },
+              {
+                id: "appliction-nme",
+                type: "application-name",
+                align: "end",
+              },
+            ],
+          },
         },
         view: {
           currentViewId: "table-view",
@@ -61,22 +77,38 @@ export default function App() {
               label: "Table View",
               columns: [
                 {
-                  id: "Language",
-                },
-                {
                   id: "name",
-                  editable: true,
-                },
-                {
-                  id: "github_stars",
                   editable: true,
                 },
                 {
                   id: "language",
                 },
                 {
-                  id: "test",
+                  id: "github_stars",
+                  editable: true,
                 },
+                {
+                  id: "open_pr_count",
+                },
+                { id: "closed_pr_count" },
+
+                {
+                  id: "my_stars",
+                  expression: "[github_stars] * 2",
+                  label: "2 Stars",
+                  width: 120,
+                  dataType: "number",
+                  aggregatable: true,
+                },
+                {
+                  id: "total_pr_count",
+                  expression: "[open_pr_count] + [closed_pr_count]",
+                  label: "All PRs",
+                  width: 120,
+                  dataType: "number",
+                  aggregatable: true,
+                },
+
                 {
                   id: "github_watchers",
                 },
