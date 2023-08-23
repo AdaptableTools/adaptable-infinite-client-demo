@@ -35,7 +35,18 @@ export default function App() {
         globalEntities: {
           availableColumns: {
             ...allColumns,
-            ...[{}],
+            "2xstars": {
+              expression: "[github_stars] * 2",
+              label: "2 x Stars",
+              dataType: "number",
+            },
+            total_pr_count: {
+              expression: "[open_pr_count] + [closed_pr_count]",
+              label: "All PRs",
+              width: 120,
+              dataType: "number",
+              aggregatable: true,
+            },
           },
         },
         grid: {},
@@ -88,30 +99,20 @@ export default function App() {
                   editable: true,
                 },
                 {
+                  id: "2xstars",
+                },
+                {
                   id: "open_pr_count",
                 },
                 { id: "closed_pr_count" },
-
-                {
-                  id: "my_stars",
-                  expression: "[github_stars] * 2",
-                  label: "2 Stars",
-                  width: 120,
-                  dataType: "number",
-                  aggregatable: true,
-                },
                 {
                   id: "total_pr_count",
-                  expression: "[open_pr_count] + [closed_pr_count]",
-                  label: "All PRs",
-                  width: 120,
-                  dataType: "number",
-                  aggregatable: true,
                 },
 
                 {
                   id: "github_watchers",
                 },
+
                 {
                   id: "description",
                 },
