@@ -51,6 +51,7 @@ export default function App() {
             <AdaptableInfinite
               licenseKey={licenseKey}
               adaptableId="my-adaptable-infinite"
+              theme='dark'
               data={data}
               onReady={(params) => {
                 setAdaptableApi(params.adaptableApi);
@@ -77,15 +78,44 @@ export default function App() {
                   },
                 },
                 view: {
-                  currentViewId: "my-view",
+                  currentViewId: "table-view",
                   views: [
                     {
-                      id: "my-view",
-                      label: "My View",
+                      id: "table-view",
+                      label: "Table View",
                       columns: [
                         {
                           id: "Language",
-                          groupBy: ["language"],
+                        },
+                        {
+                          id: "name",
+                          editable: true,
+                        },
+                        {
+                          id: "github_stars",
+                          editable: true,
+                        },
+                        {
+                          id: "language",
+                        },
+                        {
+                          id: "test",
+                        },
+                        {
+                          id: "github_watchers",
+                        },
+                        {
+                          id: "description",
+                        },
+                      ],
+                    },
+                    {
+                      id: "grouped-view",
+                      label: "Grouped View",
+                      columns: [
+                        {
+                          id: "Group",
+                          groupBy: ["language", "license"],
                         },
                         {
                           id: "name",
@@ -105,6 +135,46 @@ export default function App() {
                         },
                         {
                           id: "description",
+                        },
+                      ],
+                      aggregationColumns: [
+                        {
+                          columnId: "github_stars",
+                          aggregation: "sum",
+                          label: "Total Stars",
+                        },
+                        {
+                          columnId: "github_watchers",
+                          aggregation: "avg",
+                        },
+                      ],
+                    },
+
+                    {
+                      id: "pivot_view",
+                      label: "Pivot View",
+                      pivotColumns: [
+                        {
+                          columnId: "language",
+                        },
+                      ],
+
+                      aggregationColumns: [
+                        {
+                          columnId: "github_stars",
+                          aggregation: "sum",
+                          label: "Total Stars",
+                        },
+                        {
+                          columnId: "license",
+                          aggregation: "count",
+                        },
+                      ],
+                      groupColumns: [
+                        {
+                          id: "license-group",
+                          label: "Type of License",
+                          groupBy: ["license"],
                         },
                       ],
                     },
