@@ -56,6 +56,10 @@ export default function App() {
           top: {
             widgets: [
               {
+                id: 'settingsPanel',
+                type: 'settingsPanel',
+              },
+              {
                 id: "views",
                 type: "view",
               },

@@ -105,27 +105,29 @@ export function Settings(props: SettingsProps) {
             </div>
           </Tabs.Content>
           <Tabs.Content name="docs">
-            <div>
-              <p>
-                This is a small demo app that shows some of the capabilities of
-                the AdapTable for Infinite Table. The App includes:
-                <ul>
-                  <li>
-                    3 Views - which allow you to provide different column
-                    configurations:
-                    <ul>
-                      <li>Table View - a standard grid view</li>
-                      <li>
-                        Grouped View - 2 Row Groups (Language & Licence) and
-                        Aggregations for Stars & Watchers
-                      </li>
-                      <li>Pivot View - Grid pivoted on Language Columns</li>
-                    </ul>{" "}
-                    Table, Pivot and Grouped{" "}
-                  </li>{" "}
-                </ul>
-              </p>
-            </div>
+            <>
+              <div>
+                <p>
+                  This is a small demo app that shows some of the capabilities
+                  of the AdapTable for Infinite Table. The App includes:
+                  <ul>
+                    <li>
+                      3 Views - which allow you to provide different column
+                      configurations:
+                      <ul>
+                        <li>Table View - a standard grid view</li>
+                        <li>
+                          Grouped View - 2 Row Groups (Language & Licence) and
+                          Aggregations for Stars & Watchers
+                        </li>
+                        <li>Pivot View - Grid pivoted on Language Columns</li>
+                      </ul>{" "}
+                      Table, Pivot and Grouped{" "}
+                    </li>{" "}
+                  </ul>
+                </p>
+              </div>
+            </>
           </Tabs.Content>
         </Tabs>
       </div>
