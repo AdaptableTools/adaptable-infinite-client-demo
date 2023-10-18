@@ -16,20 +16,31 @@ const clsForSettingsLabel =
 export function Settings(props: SettingsProps) {
   const gridState = useAdaptableState((state) => state.grid);
   const initialRowHeight = gridState.rowHeight;
-  const initialZebraStripes = gridState.zebraStripes;
+  const initialZebraStripes = gridState.zebraStripes ?? true;
 
   const [rowHeight, setRowHeight] = useState(
     initialRowHeight ? `${initialRowHeight}px` : "40px"
   );
   const [zebraStripes, setZebrastripes] = useState(initialZebraStripes);
 
+  const [defaultTab] = useState(() => {
+    return localStorage.getItem("activeSettingsTab") === "docs"
+      ? "docs"
+      : "settings";
+  });
+
   useEffect(() => {
     document.documentElement.style.setProperty("--row-height", rowHeight);
   }, [rowHeight]);
   return (
-    <div className="AppSettings flex flex-row border-zinc-400 dark:text-zinc-50 text-zinc-700">
-      <div className=" flex flex-col overflow-hidden w-[30vw] ml-2 ">
-        <Tabs defaultValue={"settings"}>
+    <div className="AppSettings flex flex-row   dark:text-zinc-50 text-zinc-700">
+      <div className=" flex flex-col  overflow-hidden w-[30vw] ml-2   ">
+        <Tabs
+          defaultValue={defaultTab}
+          onValueChange={(value) => {
+            localStorage.setItem("activeSettingsTab", value);
+          }}
+        >
           <Tabs.List>
             <Tabs.Trigger name="settings">Settings</Tabs.Trigger>
 
@@ -109,22 +120,36 @@ export function Settings(props: SettingsProps) {
               <div>
                 <p>
                   This is a small demo app that shows some of the capabilities
-                  of the AdapTable for Infinite Table. The App includes:
-                  <ul>
+                  of the AdapTable for Infinite Table.
+                </p>
+                <p className="mt-5">
+                  The App includes:
+                  <ul className="list-disc list-inside">
                     <li>
-                      3 Views - which allow you to provide different column
-                      configurations:
-                      <ul>
+                      <b>3 Views</b> - which allow you to provide different
+                      column configurations:
+                      <ul className="list-disc list-inside ml-10">
                         <li>Table View - a standard grid view</li>
                         <li>
                           Grouped View - 2 Row Groups (Language & Licence) and
                           Aggregations for Stars & Watchers
                         </li>
                         <li>Pivot View - Grid pivoted on Language Columns</li>
-                      </ul>{" "}
-                      Table, Pivot and Grouped{" "}
-                    </li>{" "}
+                      </ul>
+                    </li>
+                    <li>
+                      <b>A dashboard with multiple widgets</b>:
+                      <ul className="list-disc list-inside ml-10">
+                        <li>View selector</li>
+                        <li>Export data widget</li>
+                      </ul>
+                    </li>
                   </ul>
+                </p>
+
+                <p className="mt-5">
+                  You can right-click to see the context menu and also export
+                  data.
                 </p>
               </div>
             </>

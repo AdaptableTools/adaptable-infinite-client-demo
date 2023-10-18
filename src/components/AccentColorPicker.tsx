@@ -21,10 +21,7 @@ export function AccentColorOption(props: AccentColorOptionProps) {
   );
 }
 
-const affectedCSSVars: string[] = [
-  "--adaptable-color-accent",
-  "--infinite-resize-handle-hover-background",
-];
+const affectedCSSVars: string[] = ["--adaptable-color-accent"];
 
 export function AccentColorPicker() {
   const defaultValue = "#07c";

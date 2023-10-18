@@ -13,16 +13,28 @@ import {
 import { AccentColorPicker } from "./components/AccentColorPicker";
 import { Settings } from "./components/Settings";
 import { ADAPTABLE_ID } from "./adaptableId";
+import tableView from "./views/tableView";
+import groupedView from "./views/groupedView";
+import pivotView from "./views/pivotView";
+import { ViewPicker } from "./components/ViewPicker";
 
 const licenseKey = import.meta.env.VITE_ADAPTABLE_INFINITE_LICENSE_KEY;
 
 const { Button, Layout } = components;
+
 export default function App() {
   const [adaptableApi, setAdaptableApi] = useState<AdaptableApi | undefined>(
     undefined
   );
 
-  const [settingsVisible, setSettingsVisible] = useState(false);
+  const [settingsVisible, doSetSettingsVisible] = useState(() => {
+    return localStorage.getItem("settingsVisible") === "true";
+  });
+
+  const setSettingsVisible = (visible: boolean) => {
+    localStorage.setItem("settingsVisible", visible.toString());
+    doSetSettingsVisible(visible);
+  };
   return (
     <Adaptable.Provider
       licenseKey={licenseKey}
@@ -56,8 +68,8 @@ export default function App() {
           top: {
             widgets: [
               {
-                id: 'settingsPanel',
-                type: 'settingsPanel',
+                id: "settingsPanel",
+                type: "settingsPanel",
               },
               {
                 id: "views",
@@ -66,6 +78,12 @@ export default function App() {
               {
                 id: "qs",
                 type: "quickSearch",
+                align: "end",
+              },
+              {
+                id: "export",
+                type: "export",
+                value: "Current Data",
                 align: "end",
               },
             ],
@@ -84,104 +102,32 @@ export default function App() {
             ],
           },
         },
+        styledCell: {
+          popular: {
+            label: "Popular repos",
+            condition: {
+              type: "booleanExpression",
+              expression: "[github_stars] > 100000",
+            },
+            scope: {
+              columns: ["github_stars"],
+            },
+            style: {
+              fontWeight: "bold",
+              color: "var(--adaptable-color-accent)",
+              background: "var(--adaptable-text-color-0)",
+            },
+          },
+        },
         view: {
           currentViewId: "table-view",
           views: [
             {
-              id: "table-view",
-              label: "Table View",
-              columns: [
-                {
-                  id: "name",
-                  editable: true,
-                },
-                {
-                  id: "language",
-                },
-                {
-                  id: "github_stars",
-                  editable: true,
-                },
-                {
-                  id: "2xstars",
-                },
-                {
-                  id: "open_pr_count",
-                },
-                { id: "closed_pr_count" },
-                {
-                  id: "total_pr_count",
-                },
-
-                {
-                  id: "github_watchers",
-                },
-
-                {
-                  id: "description",
-                },
-              ],
+              ...tableView,
+              styledCells: ["popular"],
             },
-            {
-              id: "grouped-view",
-              label: "Grouped View",
-              columns: [
-                {
-                  id: "Group",
-                  groupBy: ["language", "license"],
-                },
-                {
-                  id: "name",
-                  editable: true,
-                },
-                {
-                  id: "github_stars",
-                  aggregation: "sum",
-                },
-                {
-                  id: "language",
-                },
-                {
-                  id: "test",
-                },
-                {
-                  id: "github_watchers",
-                  aggregation: "sum",
-                },
-                {
-                  id: "description",
-                },
-              ],
-            },
-
-            {
-              id: "pivot_view",
-              label: "Pivot View",
-              pivotColumns: [
-                {
-                  columnId: "language",
-                },
-              ],
-
-              pivotAggregationColumns: [
-                {
-                  columnId: "github_stars",
-                  aggregation: "sum",
-                  label: "Total Stars",
-                },
-                {
-                  columnId: "license",
-                  aggregation: "count",
-                },
-              ],
-              pivotGroupColumns: [
-                {
-                  id: "license-group",
-                  label: "Type of License",
-                  groupBy: ["license"],
-                },
-              ],
-            },
+            groupedView,
+            pivotView,
           ],
         },
       }}
@@ -195,6 +141,7 @@ export default function App() {
           AdapTable for Infinite Table for React Demo
         </div>
         <div className=" grow text-end flex flex-row justify-end items-center">
+          <ViewPicker />
           <AccentColorPicker />
 
           <Layout mt={3} ml={5}>
@@ -210,7 +157,7 @@ export default function App() {
       </h2>
       <div className="grow p-2 flex flex-col">
         <div className=" flex flex-row grow">
-          <div className="border-2 flex flex-col border-zinc-400 grow">
+          <div className="border flex flex-col border-zinc-400 grow">
             <Adaptable.UI />
           </div>
           {settingsVisible && adaptableApi && (
