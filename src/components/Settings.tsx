@@ -51,6 +51,12 @@ export function Settings(props: SettingsProps) {
             <Tabs.Trigger name="docs">Docs</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content name="settings">
+            <div className="my-7 text-lg font-bold">
+              This panel is custom-built - and not part of Adaptable itself.
+              <br />
+              However, it's using the Adaptable State to have full control over
+              the component.
+            </div>
             <div className="grid gap-3 grid-cols-[1fr_10fr] overflow-auto">
               <span className={clsForSettingsLabel}>Theme</span>
               <div>

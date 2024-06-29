@@ -129,6 +129,11 @@ export default function App() {
   );
 
   const [settingsVisible, doSetSettingsVisible] = useState(() => {
+    // make it visible initially
+    if (!localStorage.getItem("settingsVisible")) {
+      localStorage.setItem("settingsVisible", "true");
+      return true;
+    }
     return localStorage.getItem("settingsVisible") === "true";
   });
 
