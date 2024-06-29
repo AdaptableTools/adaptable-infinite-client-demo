@@ -5,27 +5,28 @@ export default {
   label: "Pivot View",
   pivotColumns: [
     {
-      columnId: "language",
+      columnId: "stack",
     },
   ],
 
   pivotAggregationColumns: [
     {
-      columnId: "github_stars",
+      columnId: "reposCount",
       aggregation: "sum",
-      label: "Total Stars",
+      label: "Total Repos",
     },
     {
-      columnId: "license",
-      aggregation: "count",
+      columnId: "salary",
+      aggregation: "min",
+      label: "Min Salary",
     },
   ],
 
   pivotGroupColumns: [
     {
-      id: "license-group",
-      label: "Type of License",
-      groupBy: ["license"],
+      id: "language-group",
+      label: "Language",
+      groupBy: ["country", "preferredLanguage"],
     },
   ],
 } as AdaptablePivotView;

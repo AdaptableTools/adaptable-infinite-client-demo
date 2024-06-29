@@ -40,3 +40,8 @@ body,
   width: 100%;
   margin: 0;
 }
+
+.AdaptableInfiniteDashboard {
+  overflow-x: auto;
+  overflow-y: visible;
+}

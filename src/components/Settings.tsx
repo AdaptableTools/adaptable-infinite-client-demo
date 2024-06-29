@@ -1,27 +1,26 @@
 import {
   AdaptableApi,
+  AdaptableUserState,
   components,
+  useAdaptableApi,
   useAdaptableState,
 } from "@adaptabletools/adaptable-infinite-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const { Button, Tabs, Select, Checkbox } = components;
 type SettingsProps = {
   onClose: () => void;
+  onStateChange: (state: AdaptableUserState) => void;
   adaptableApi: AdaptableApi;
 };
 
 const clsForSettingsLabel =
   "text-md whitespace-nowrap flex flex-row items-center";
-export function Settings(props: SettingsProps) {
-  const gridState = useAdaptableState((state) => state.grid);
-  const initialRowHeight = gridState.rowHeight;
-  const initialZebraStripes = gridState.zebraStripes ?? true;
 
-  const [rowHeight, setRowHeight] = useState(
-    initialRowHeight ? `${initialRowHeight}px` : "40px"
-  );
-  const [zebraStripes, setZebrastripes] = useState(initialZebraStripes);
+export function Settings(props: SettingsProps) {
+  const adaptableState = useAdaptableState();
+  const api = useAdaptableApi();
+  const currentViewId = useAdaptableState((state) => state.view.currentViewId);
 
   const [defaultTab] = useState(() => {
     return localStorage.getItem("activeSettingsTab") === "docs"
@@ -29,9 +28,14 @@ export function Settings(props: SettingsProps) {
       : "settings";
   });
 
-  useEffect(() => {
-    document.documentElement.style.setProperty("--row-height", rowHeight);
-  }, [rowHeight]);
+  const editable =
+    adaptableState.globalEntities?.columnDefaults?.editable ?? true;
+
+  const updateState = (
+    updater: (state: AdaptableUserState) => AdaptableUserState
+  ) => {
+    props.onStateChange(updater(adaptableState));
+  };
   return (
     <div className="AppSettings flex flex-row   dark:text-zinc-50 text-zinc-700">
       <div className=" flex flex-col  overflow-hidden w-[30vw] ml-2   ">
@@ -54,7 +58,13 @@ export function Settings(props: SettingsProps) {
                   size="small"
                   variant="text"
                   onClick={() => {
-                    props.adaptableApi.themeApi.setTheme("light");
+                    updateState((state) => ({
+                      ...state,
+                      theme: {
+                        ...state.theme,
+                        currentTheme: "light",
+                      },
+                    }));
                   }}
                 >
                   light
@@ -64,7 +74,13 @@ export function Settings(props: SettingsProps) {
                   size="small"
                   ml={3}
                   onClick={() => {
-                    props.adaptableApi.themeApi.setTheme("dark");
+                    updateState((state) => ({
+                      ...state,
+                      theme: {
+                        ...state.theme,
+                        currentTheme: "dark",
+                      },
+                    }));
                   }}
                 >
                   dark
@@ -74,8 +90,13 @@ export function Settings(props: SettingsProps) {
               <span className={clsForSettingsLabel}>Row Height</span>
               <Select
                 onChange={(value) => {
-                  setRowHeight(value);
-                  props.adaptableApi.gridApi.setRowHeight(parseInt(value));
+                  updateState((state) => ({
+                    ...state,
+                    grid: {
+                      ...state.grid,
+                      rowHeight: parseInt(value),
+                    },
+                  }));
                 }}
                 options={[
                   {
@@ -91,15 +112,20 @@ export function Settings(props: SettingsProps) {
                     value: "50px",
                   },
                 ]}
-                value={rowHeight}
+                value={`${adaptableState.grid.rowHeight}px`}
               />
 
               <span className={clsForSettingsLabel}>Zebra stripes</span>
               <Checkbox
-                checked={zebraStripes}
-                onChange={(value) => {
-                  setZebrastripes(value);
-                  props.adaptableApi.gridApi.setZebraStripes(value);
+                checked={adaptableState.grid.zebraStripes ?? true}
+                onChange={(zebraStripes) => {
+                  updateState((state) => ({
+                    ...state,
+                    grid: {
+                      ...state.grid,
+                      zebraStripes,
+                    },
+                  }));
                 }}
               />
               <span className={clsForSettingsLabel}>Clear state</span>
@@ -113,6 +139,62 @@ export function Settings(props: SettingsProps) {
                   Clear & reload
                 </Button>
               </div>
+
+              <span className={clsForSettingsLabel}>Current view</span>
+              <div>
+                <Select
+                  value={currentViewId}
+                  onChange={(value) => {
+                    // we can use the api to change the view
+                    // or we could use the updateState function
+                    api.viewApi.setActiveView(value);
+                  }}
+                  options={adaptableState.view.views.map((view) => {
+                    return {
+                      label: view.label,
+                      value: view.id,
+                    };
+                  })}
+                />
+              </div>
+
+              <span className={clsForSettingsLabel}>Allow Editing</span>
+              <div style={{ display: "flex", flexFlow: "row" }}>
+                <Checkbox
+                  checked={editable}
+                  onChange={(editable) => {
+                    updateState((state) => ({
+                      ...state,
+                      globalEntities: {
+                        ...state.globalEntities,
+                        columnDefaults: {
+                          ...state.globalEntities?.columnDefaults,
+                          editable,
+                        },
+                      },
+                      view: {
+                        ...state.view,
+                        views: state.view.views?.map((view) => {
+                          if (view.pivotColumns) {
+                            return view;
+                          }
+                          return {
+                            ...view,
+                            columns: view.columns?.map((column) => {
+                              return {
+                                ...column,
+                                editable,
+                              };
+                            }),
+                          };
+                        }),
+                      },
+                    }));
+                  }}
+                >
+                  Columns are currently {editable ? "editable" : "read-only"}.
+                </Checkbox>
+              </div>
             </div>
           </Tabs.Content>
           <Tabs.Content name="docs">
@@ -122,7 +204,7 @@ export function Settings(props: SettingsProps) {
                   This is a small demo app that shows some of the capabilities
                   of the AdapTable for Infinite Table.
                 </p>
-                <p className="mt-5">
+                <div className="mt-5">
                   The App includes:
                   <ul className="list-disc list-inside">
                     <li>
@@ -131,21 +213,23 @@ export function Settings(props: SettingsProps) {
                       <ul className="list-disc list-inside ml-10">
                         <li>Table View - a standard grid view</li>
                         <li>
-                          Grouped View - 2 Row Groups (Language & Licence) and
-                          Aggregations for Stars & Watchers
+                          Grouped View - 2 Row Groups (Stack & Preferred
+                          Language) and Aggregations for reposCount and salary
                         </li>
-                        <li>Pivot View - Grid pivoted on Language Columns</li>
+                        <li>Pivot View - Grid pivoted on Stack Column</li>
                       </ul>
                     </li>
                     <li>
                       <b>A dashboard with multiple widgets</b>:
                       <ul className="list-disc list-inside ml-10">
                         <li>View selector</li>
+                        <li>Grid filter</li>
+                        <li>Quick search</li>
                         <li>Export data widget</li>
                       </ul>
                     </li>
                   </ul>
-                </p>
+                </div>
 
                 <p className="mt-5">
                   You can right-click to see the context menu and also export

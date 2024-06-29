@@ -3,25 +3,22 @@ import { AdaptableTableView } from "@adaptabletools/adaptable-infinite-react";
 export const columns = [
   {
     id: "Group",
-    groupBy: ["language", "license"],
+    groupBy: ["stack", "preferredLanguage"],
   },
   {
-    id: "name",
+    id: "firstName",
     editable: true,
   },
   {
-    id: "github_stars",
+    id: "reposCount",
     aggregation: "sum",
   },
   {
-    id: "language",
+    id: "hobby",
   },
   {
-    id: "test",
-  },
-
-  {
-    id: "description",
+    id: "salary",
+    aggregation: "average",
   },
 ];
 

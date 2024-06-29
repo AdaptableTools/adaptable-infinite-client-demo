@@ -1,40 +1,42 @@
 import { AdaptableTableView } from "@adaptabletools/adaptable-infinite-react";
 
-export const columns = [
+export const columns: AdaptableTableView["columns"] = [
   {
-    id: "name",
+    id: "firstName",
     editable: true,
   },
   {
-    id: "language",
-  },
-  {
-    id: "github_stars",
+    id: "lastName",
     editable: true,
   },
-  {
-    id: "2xstars",
-  },
-  {
-    id: "open_pr_count",
-  },
-  { id: "closed_pr_count" },
-  {
-    id: "total_pr_count",
-  },
-
-  {
-    id: "github_watchers",
-  },
-
   {
     id: "description",
+  },
+  {
+    id: "preferredLanguage",
+  },
+  {
+    id: "stack",
+  },
+  {
+    id: "reposCount",
+    editable: true,
+  },
+  {
+    id: "hireDate",
+  },
+
+  {
+    id: "salary",
+  },
+  {
+    id: "2xsalary",
   },
 ];
 
 export default {
   id: "table-view",
   label: "Table View",
-  styledCells: ["popular"],
+  // styledCells: ["popular"],
   columns,
 } as AdaptableTableView;

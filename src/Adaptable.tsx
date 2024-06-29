@@ -1,12 +1,13 @@
 "use client";
-import { allColumns, data } from "./data/frameworks";
-import { useState } from "react";
+
+import { useCallback, useState } from "react";
 
 import "@adaptabletools/adaptable-infinite-react/index.css";
 
 import {
   Adaptable,
   AdaptableApi,
+  AdaptableUserState,
   components,
 } from "@adaptabletools/adaptable-infinite-react";
 
@@ -17,10 +18,110 @@ import tableView from "./views/tableView";
 import groupedView from "./views/groupedView";
 import pivotView from "./views/pivotView";
 import { ViewPicker } from "./components/ViewPicker";
+import { type Developer, availableColumns } from "./data/columns";
 
 const licenseKey = import.meta.env.VITE_ADAPTABLE_INFINITE_LICENSE_KEY;
 
+const API_URL = "https://infinite-table.com/.netlify/functions/json-server";
+const DATA_SOURCE_SIZE = "1k";
+
 const { Button, Layout } = components;
+
+const dataSource = () => {
+  return fetch(`${API_URL}/developers${DATA_SOURCE_SIZE}`)
+    .then((response) => response.json())
+    .then((data) => {
+      return data as Developer[];
+    });
+};
+
+const defaultState: AdaptableUserState = {
+  globalEntities: {
+    columnDefaults: {
+      editable: true,
+    },
+    availableColumns,
+  },
+  grid: {
+    zebraStripes: true,
+    rowHeight: 40,
+  },
+  theme: {
+    currentTheme: "dark",
+  },
+
+  dashboard: {
+    top: {
+      widgets: [
+        {
+          id: "settingsPanel",
+          type: "settingsPanel",
+        },
+        {
+          id: "views",
+          type: "view",
+        },
+
+        {
+          id: "filter",
+          type: "grid-filter",
+        },
+        {
+          id: "qs",
+          type: "quickSearch",
+          align: "end",
+        },
+        {
+          id: "export",
+          type: "export",
+          value: "Current Data",
+          align: "end",
+        },
+      ],
+    },
+    bottom: {
+      widgets: [
+        {
+          id: "row-count",
+          type: "row-count",
+        },
+        {
+          id: "appliction-nme",
+          type: "application-name",
+          align: "end",
+        },
+      ],
+    },
+  },
+  styledCell: {
+    productive: {
+      label: "Productive developer",
+      condition: {
+        type: "booleanExpression",
+        expression: "[reposCount] > 10",
+      },
+      scope: {
+        columns: ["reposCount"],
+      },
+      style: {
+        fontWeight: "bold",
+        color: "var(--adaptable-color-accent)",
+        background: "var(--adaptable-text-color-0)",
+      },
+    },
+  },
+  view: {
+    currentViewId: "table-view",
+    views: [
+      {
+        ...tableView,
+        styledCells: ["productive"],
+      },
+      groupedView,
+      pivotView,
+    ],
+  },
+};
 
 export default function App() {
   const [adaptableApi, setAdaptableApi] = useState<AdaptableApi | undefined>(
@@ -35,110 +136,32 @@ export default function App() {
     localStorage.setItem("settingsVisible", visible.toString());
     doSetSettingsVisible(visible);
   };
+
+  const onReady = useCallback(
+    ({ adaptableApi }: { adaptableApi: AdaptableApi }) => {
+      setAdaptableApi(adaptableApi);
+    },
+    []
+  );
+
+  const [state, setState] = useState<AdaptableUserState>(defaultState);
   return (
     <Adaptable.Provider
       licenseKey={licenseKey}
+      primaryKey="id"
       adaptableId={ADAPTABLE_ID}
-      data={data}
-      onReady={(params) => {
-        setAdaptableApi(params.adaptableApi);
-      }}
-      defaultState={{
-        globalEntities: {
-          availableColumns: {
-            ...allColumns,
-            "2xstars": {
-              expression: "[github_stars] * 2",
-              label: "2 x Stars",
-              dataType: "number",
-            },
-            total_pr_count: {
-              expression: "[open_pr_count] + [closed_pr_count]",
-              label: "All PRs",
-              width: 120,
-              dataType: "number",
-              aggregatable: true,
-            },
-          },
-        },
-        grid: {},
-        theme: "dark",
-        primaryKey: "id",
-        dashboard: {
-          top: {
-            widgets: [
-              {
-                id: "settingsPanel",
-                type: "settingsPanel",
-              },
-              {
-                id: "views",
-                type: "view",
-              },
-              {
-                id: "qs",
-                type: "quickSearch",
-                align: "end",
-              },
-              {
-                id: "export",
-                type: "export",
-                value: "Current Data",
-                align: "end",
-              },
-            ],
-          },
-          bottom: {
-            widgets: [
-              {
-                id: "row-count",
-                type: "row-count",
-              },
-              {
-                id: "appliction-nme",
-                type: "application-name",
-                align: "end",
-              },
-            ],
-          },
-        },
-        styledCell: {
-          popular: {
-            label: "Popular repos",
-            condition: {
-              type: "booleanExpression",
-              expression: "[github_stars] > 100000",
-            },
-            scope: {
-              columns: ["github_stars"],
-            },
-            style: {
-              fontWeight: "bold",
-              color: "var(--adaptable-color-accent)",
-              background: "var(--adaptable-text-color-0)",
-            },
-          },
-        },
-        view: {
-          currentViewId: "table-view",
-          views: [
-            {
-              ...tableView,
-              styledCells: ["popular"],
-            },
-            groupedView,
-            pivotView,
-          ],
-        },
-      }}
+      data={dataSource}
+      onReady={onReady}
+      state={state}
+      onStateChange={setState}
     >
       <h2 className="font-bold p-2 flex flex-row items-center">
         <div className="text-2xl flex flex-row items-center dark:text-zinc-50 text-zinc-700">
           <img
             alt="Adaptable Logo"
             className="AdaptableLogo h-8 inline-block mr-2"
-          />{" "}
-          AdapTable for Infinite Table for React Demo
+          />
+          Adaptable for Infinite Table Demo
         </div>
         <div className=" grow text-end flex flex-row justify-end items-center">
           <ViewPicker />
@@ -162,6 +185,7 @@ export default function App() {
           </div>
           {settingsVisible && adaptableApi && (
             <Settings
+              onStateChange={setState}
               adaptableApi={adaptableApi}
               onClose={() => {
                 setSettingsVisible(false);
