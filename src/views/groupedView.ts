@@ -6,13 +6,14 @@ export const columns = [
     groupBy: ["stack", "preferredLanguage"],
   },
   {
-    id: "firstName",
+    id: "fullName",
     editable: true,
   },
   {
     id: "reposCount",
     aggregation: "sum",
   },
+  { id: "weeklyRepoChange", aggregation: "max", editable: true },
   {
     id: "hobby",
   },

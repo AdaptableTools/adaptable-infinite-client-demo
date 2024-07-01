@@ -6,6 +6,7 @@ import {
   useAdaptableState,
 } from "@adaptabletools/adaptable-infinite-react";
 import { useState } from "react";
+import { useAppContext } from "../appContext";
 
 const { Button, Tabs, Select, Checkbox } = components;
 type SettingsProps = {
@@ -36,6 +37,8 @@ export function Settings(props: SettingsProps) {
   ) => {
     props.onStateChange(updater(adaptableState));
   };
+
+  const appContext = useAppContext();
   return (
     <div className="AppSettings flex flex-row   dark:text-zinc-50 text-zinc-700">
       <div className=" flex flex-col  overflow-hidden w-[30vw] ml-2   ">
@@ -134,35 +137,6 @@ export function Settings(props: SettingsProps) {
                   }));
                 }}
               />
-              <span className={clsForSettingsLabel}>Clear state</span>
-              <div>
-                <Button
-                  onClick={() => {
-                    localStorage.clear();
-                    window.location.reload();
-                  }}
-                >
-                  Clear & reload
-                </Button>
-              </div>
-
-              <span className={clsForSettingsLabel}>Current view</span>
-              <div>
-                <Select
-                  value={currentViewId}
-                  onChange={(value) => {
-                    // we can use the api to change the view
-                    // or we could use the updateState function
-                    api.viewApi.setActiveView(value);
-                  }}
-                  options={adaptableState.view.views.map((view) => {
-                    return {
-                      label: view.label,
-                      value: view.id,
-                    };
-                  })}
-                />
-              </div>
 
               <span className={clsForSettingsLabel}>Allow Editing</span>
               <div style={{ display: "flex", flexFlow: "row" }}>
@@ -197,10 +171,94 @@ export function Settings(props: SettingsProps) {
                       },
                     }));
                   }}
-                >
-                  Columns are currently {editable ? "editable" : "read-only"}.
-                </Checkbox>
+                ></Checkbox>
               </div>
+
+              <span className={clsForSettingsLabel}>Clear state</span>
+              <div>
+                <Button
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.reload();
+                  }}
+                >
+                  Clear & reload
+                </Button>
+              </div>
+
+              <span className={clsForSettingsLabel}>Current view</span>
+              <div>
+                <Select
+                  value={currentViewId}
+                  onChange={(value) => {
+                    // we can use the api to change the view
+                    // or we could use the updateState function
+                    api.viewApi.setActiveView(value);
+                  }}
+                  options={adaptableState.view.views.map((view) => {
+                    return {
+                      label: view.label,
+                      value: view.id,
+                    };
+                  })}
+                />
+              </div>
+              {currentViewId === "address-view" ? (
+                <>
+                  <span className={clsForSettingsLabel}>
+                    Fields available in
+                    <br />
+                    Expression Editor
+                  </span>
+                  <ul
+                    style={{
+                      listStyleType: "none",
+                    }}
+                  >
+                    {appContext.value.fields.map((field) => {
+                      return (
+                        <li key={field.name}>
+                          <Checkbox
+                            checked={field.enabled}
+                            onChange={(enabled) => {
+                              const newFields = appContext.value.fields.map(
+                                (f) => {
+                                  if (f.name === field.name) {
+                                    return {
+                                      ...f,
+                                      enabled,
+                                    };
+                                  }
+                                  return f;
+                                }
+                              );
+                              appContext.setFields(newFields);
+                            }}
+                          >
+                            {field.label}
+                          </Checkbox>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <span className={clsForSettingsLabel}>Change DataSource</span>
+                  <div>
+                    <Checkbox
+                      checked={appContext.value.fullDataSource}
+                      onChange={() => {
+                        appContext.setAppContext({
+                          ...appContext.value,
+                          fullDataSource: !appContext.value.fullDataSource,
+                        });
+                      }}
+                    >
+                      (using{" "}
+                      {appContext.value.fullDataSource ? "full" : "reduced"}{" "}
+                      data source)
+                    </Checkbox>
+                  </div>
+                </>
+              ) : null}
             </div>
           </Tabs.Content>
           <Tabs.Content name="docs">

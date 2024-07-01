@@ -34,6 +34,11 @@ export const availableColumns: Record<string, AdaptableColDef> = {
     field: "lastName",
     dataType: "text",
   },
+  fullName: {
+    label: "Full Name",
+    expression: "[firstName] + ' ' + [lastName]",
+    dataType: "text",
+  },
   preferredLanguage: {
     label: "Preferred Language",
     field: "preferredLanguage",
@@ -61,12 +66,43 @@ export const availableColumns: Record<string, AdaptableColDef> = {
     label: "Salary",
     field: "salary",
     dataType: "number",
+    columnType: "money",
   },
-  "2xsalary": {
-    label: "2x Salary",
-    expression: "[salary] * 2",
+  salaryLevel: {
+    label: "Salary Level",
+    expression:
+      "[salary] < 100000 ? 'Low' : [salary] < 250000 ? 'Medium' : 'High'",
+    dataType: "text",
+  },
+  monthlyBonus: {
+    label: "Monthly Bonus",
+    field: "monthlyBonus",
+    dataType: "number",
+    columnType: "money",
+  },
+  totalPackage: {
+    label: "Total Package",
+    expression: `([salary] + [monthlyBonus] * 12) * (FIELD("currency") = "EUR" ? 1.2 : FIELD("currency") = "GBP" ? 1.4 : 1)`,
+    dataType: "number",
+    columnType: "money",
+  },
+  weeklyRepoChange: {
+    label: "Weekly Repo Change",
+    field: "weeklyRepoChange",
     dataType: "number",
   },
+
+  location: {
+    label: "Location",
+    expression: `FIELD("city") + ", " + FIELD("country")`,
+    dataType: "text",
+  },
+  address: {
+    label: "Address",
+    expression: `FIELD("streetNo") + ", " + FIELD("streetPrefix") + ", " + FIELD("streetName")`,
+    dataType: "text",
+  },
+
   description: {
     label: "Description (calculated)",
     width: 450,

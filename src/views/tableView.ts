@@ -9,9 +9,7 @@ export const columns: AdaptableTableView["columns"] = [
     id: "lastName",
     editable: true,
   },
-  {
-    id: "description",
-  },
+
   {
     id: "preferredLanguage",
   },
@@ -22,6 +20,7 @@ export const columns: AdaptableTableView["columns"] = [
     id: "reposCount",
     editable: true,
   },
+  { id: "weeklyRepoChange" },
   {
     id: "hireDate",
   },
@@ -29,8 +28,25 @@ export const columns: AdaptableTableView["columns"] = [
   {
     id: "salary",
   },
+  { id: "salaryLevel" },
   {
-    id: "2xsalary",
+    id: "monthlyBonus",
+  },
+  {
+    id: "totalPackage",
+  },
+
+  {
+    id: "age",
+  },
+  {
+    id: "email",
+  },
+  {
+    id: "location",
+  },
+  {
+    id: "description",
   },
 ];
 

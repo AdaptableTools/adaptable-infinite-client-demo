@@ -26,7 +26,7 @@ export default {
     {
       id: "language-group",
       label: "Language",
-      groupBy: ["country", "preferredLanguage"],
+      groupBy: ["preferredLanguage"],
     },
   ],
 } as AdaptablePivotView;
